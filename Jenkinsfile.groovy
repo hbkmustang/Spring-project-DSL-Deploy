@@ -54,22 +54,22 @@ pipeline {
         }
 
 
-#         stage ("DEPLOY") {
-#             agent any        
-#             steps {
-#                 build 'docker-Instance/deploy_in_docker_repo'
-# 
-#             parallel (
-#                     "ci-Instance" : {
-#                         build("ci-Instance/deploy", parameters: [string(name: "Artifact_Version", value: "${env.Artifact_Version}")])
-#                         build("ci-Instance/deploy_in_docker_repo", parameters: [string(name: "Image_Version", value: "${env.Image_Version}")])
-#                     },
-#                     "docker-Instance" : {
-#                         build("docker-Instance/deploy", parameters: [string(name: "Artifact_Version", value: "${env.Artifact_Version}")])
-#                         build("docker-Instance/deploy_in_docker_repo", parameters: [string(name: "Image_Version", value: "${env.Image_Version}")])
-#                     }
-#             }, failFast: true
-#         }
+//         stage ("DEPLOY") {
+//             agent any        
+//             steps {
+//                 build 'docker-Instance/deploy_in_docker_repo'
+// 
+//             parallel (
+//                     "ci-Instance" : {
+//                         build("ci-Instance/deploy", parameters: [string(name: "Artifact_Version", value: "${env.Artifact_Version}")])
+//                         build("ci-Instance/deploy_in_docker_repo", parameters: [string(name: "Image_Version", value: "${env.Image_Version}")])
+//                     },
+//                     "docker-Instance" : {
+//                         build("docker-Instance/deploy", parameters: [string(name: "Artifact_Version", value: "${env.Artifact_Version}")])
+//                         build("docker-Instance/deploy_in_docker_repo", parameters: [string(name: "Image_Version", value: "${env.Image_Version}")])
+//                     }
+//             }, failFast: true
+//         }
         
         stage {
             agent no
