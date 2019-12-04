@@ -98,7 +98,8 @@ pipeline {
          stage ("DEPLOY TO QA") {
              agent any
              steps {
-                 build('qa-Instance/deploy', parameters: [string(name: "Artifact_Version", value: "${env.Artifact_Version}")])
+                 // build job: 'ANOTHER_JOB_NAME', wait: false, parameters: [string(name: 'HELLO', value: String.valueOf(PARAMETER01))]
+                 build job: 'qa-Instance/deploy', wait: false, parameters: [string(name: "Artifact_Version", value: "${env.Artifact_Version}")])
                  // build('qa-Instance/deploy_in_docker_repo', parameters: [string(name: "Artifact_Version", value: "${env.Artifact_Version}")])
              }
          }
