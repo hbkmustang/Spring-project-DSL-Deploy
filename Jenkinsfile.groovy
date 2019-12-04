@@ -45,13 +45,13 @@ pipeline {
 //        }
 //    }
 
-        stage ("CHOOSE VERSIONS") {
-            agent any
-            steps {
-                echo "${env.Artifact_Version}"
-                echo "${env.Image_Version}"
-            }
-        }
+         stage ("CHOOSE VERSIONS") {
+             agent any
+             steps {
+                 echo "${env.Artifact_Version}"
+                 echo "${env.Image_Version}"
+             }
+         }
 
 
 //         stage ("DEPLOY") {
@@ -71,33 +71,34 @@ pipeline {
 //             }, failFast: true
 //         }
         
-        stage {
-            agent no
-            // timeout(time: 3, unit: "MINUTES") {
-            //    input message: 'Do you want to approve the deploy in production (only for admin user)?', ok: 'Yes'
-            //    submitter "admin"
-            // } 
-            try {
-                timeout(time: 30, unit: 'SECONDS') {
-                    input message: 'Do you want to approve the deploy in production (only for admin user)?', ok: 'Yes'
-                    submitter "admin"
-                }
-            } catch(err) {
-                  def user = err.getCauses()[0].getUser()
-                  if (user.toString == 'SYSTEM') {  // if it's system it's a timeout
-                      didTimeout = true
-                      echo "Build timed out at approval step"
-                  } else if (userInput == false) {  // if not and input is false it's the user
-                      echo "Build aborted by: [${user}]"
-                  }
-            }
-        }
+         stage {
+             agent no
+             // timeout(time: 3, unit: "MINUTES") {
+             //    input message: 'Do you want to approve the deploy in production (only for admin user)?', ok: 'Yes'
+             //    submitter "admin"
+             // } 
+             try {
+                 timeout(time: 30, unit: 'SECONDS') {
+                     input message: 'Do you want to approve the deploy in production (only for admin user)?', ok: 'Yes'
+                     submitter "admin"
+                 }
+             } catch(err) {
+                   def user = err.getCauses()[0].getUser()
+                   if (user.toString == 'SYSTEM') {  // if it's system it's a timeout
+                       didTimeout = true
+                       echo "Build timed out at approval step"
+                   } else if (userInput == false) {  // if not and input is false it's the user
+                       echo "Build aborted by: [${user}]"
+                   }
+             }
+         }
+ 
+         stage {
+             agent any
+             build('qa-Instance/deploy', parameters: [string(name: "Artifact_Version", value: "${env.Artifact_Version}")])
+             // build('qa-Instance/deploy_in_docker_repo', parameters: [string(name: "Artifact_Version", value: "${env.Artifact_Version}")])
+         }
 
-        stage {
-            agent any
-            build('qa-Instance/deploy', parameters: [string(name: "Artifact_Version", value: "${env.Artifact_Version}")])
-            // build('qa-Instance/deploy_in_docker_repo', parameters: [string(name: "Artifact_Version", value: "${env.Artifact_Version}")])
-        }
 
-
+    }
 }
