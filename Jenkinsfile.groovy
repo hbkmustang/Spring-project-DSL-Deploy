@@ -13,7 +13,7 @@ var_arim= "${process.in.text}" .eachLine { line ->
 }''']]]])])
 
 pipeline {
-    agent no
+    agent none
 //    parameters {
 //        choice(
 //            name: 'Versions',
@@ -45,7 +45,7 @@ pipeline {
 //        }
 //    }
 
-         stage ("CHOOSE VERSIONS") {
+         stage ("OUTPUT CHOICED VERSIONS") {
              agent any
              steps {
                  echo "${env.Artifact_Version}"
@@ -71,8 +71,8 @@ pipeline {
 //             }, failFast: true
 //         }
         
-         stage {
-             agent no
+         stage ("APPROVAL FOR DEPLOY TO QA") {
+             agent none
              // timeout(time: 3, unit: "MINUTES") {
              //    input message: 'Do you want to approve the deploy in production (only for admin user)?', ok: 'Yes'
              //    submitter "admin"
@@ -93,10 +93,12 @@ pipeline {
              }
          }
  
-         stage {
+         stage ("DEPLOY TO QA") {
              agent any
-             build('qa-Instance/deploy', parameters: [string(name: "Artifact_Version", value: "${env.Artifact_Version}")])
-             // build('qa-Instance/deploy_in_docker_repo', parameters: [string(name: "Artifact_Version", value: "${env.Artifact_Version}")])
+             steps {
+                 build('qa-Instance/deploy', parameters: [string(name: "Artifact_Version", value: "${env.Artifact_Version}")])
+                 // build('qa-Instance/deploy_in_docker_repo', parameters: [string(name: "Artifact_Version", value: "${env.Artifact_Version}")])
+             }
          }
 
 
