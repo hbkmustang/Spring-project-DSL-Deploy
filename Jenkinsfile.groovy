@@ -79,8 +79,8 @@ pipeline {
              // } 
              steps {
                  timeout(time: 30, unit: 'SECONDS') {
-                     input message: 'Do you want to approve the deploy in production (only for Bohdan user)?', ok: 'Yes'
-                     submitter "Bohdan"
+                     input message: 'Do you want to approve the deploy in production (only for Bohdan,hbkmustang,admin users)?', ok: 'Yes'
+                     submitter "Bohdan,hbkmustang,admin"
                  }
 //                 try {
 //                     timeout(time: 30, unit: 'SECONDS') {
