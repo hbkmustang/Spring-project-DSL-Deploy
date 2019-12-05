@@ -54,7 +54,7 @@ pipeline {
          }
 
 
-         stage ("DEPLOY") {
+         stage ("DEPLOY CI AND DOCKER INSTANCES") {
              agent any        
              steps {
                  build 'docker-Instance/deploy_in_docker_repo'
@@ -68,7 +68,7 @@ pipeline {
                          build job: 'action-Instance/deploy', wait: true, parameters: [string(name: "ArtifactVersion", value: "${env.ArtifactVersion}"), string(name: "InstanceName", value: "docker")]
                          build job: 'action-Instance/deploy_in_docker_repo', wait: true,  parameters: [string(name: "ImageVersion", value: "${env.ImageVersion}"), string(name: "InstanceName", value: "docker")]
                      }
-             }, failFast: true
+             ), failFast: true
          }
         
          stage ("APPROVAL FOR DEPLOY TO QA") {
