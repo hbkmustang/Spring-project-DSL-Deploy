@@ -72,15 +72,18 @@ pipeline {
 //         }
         
          stage ("APPROVAL FOR DEPLOY TO QA") {
-             agent any
+             agent none
              // timeout(time: 3, unit: "MINUTES") {
              //    input message: 'Do you want to approve the deploy in production (only for admin user)?', ok: 'Yes'
              //    submitter "admin"
              // } 
-//             steps {
+             steps {
                  timeout(time: 30, unit: 'SECONDS') {
-                     input message: 'Do you want to approve the deploy in production (only for Bohdan,hbkmustang,admin users)?', ok: 'Yes, we should'
-                     // submitter "Bohdan,hbkmustang,admin"
+                     input message {
+                         message "Do you want to approve the deploy in production (only for Bohdan,hbkmustang,admin users)?"
+                         ok "Yes"
+                         // submitter "Bohdan,hbkmustang,admin"
+                     }
                  }
 //                 try {
 //                     timeout(time: 30, unit: 'SECONDS') {
@@ -96,7 +99,7 @@ pipeline {
 //                           echo "Build aborted by: [${user}]"
 //                       }
 //                 }
-//             }
+             }
          }
  
          stage ("DEPLOY TO QA") {
