@@ -80,7 +80,7 @@ pipeline {
              // } 
              steps {
                  timeout(time: 30, unit: 'SECONDS') {
-                     input(id: 'Proceed1', message: 'Please confirm you agree with this', ok 'Yes')
+                     input(id: 'Proceed1', message: 'Please confirm you agree with this')
                          // parameters: [[$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm you agree with this']])
 //                     input {
 //                         message "Do you want to approve the deploy in production (only for Bohdan,hbkmustang,admin users)?"
