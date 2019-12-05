@@ -77,7 +77,7 @@ pipeline {
              steps {
                  timeout(time: 30, unit: 'SECONDS') {
                          input message: 'Do you want to approve the deploy in production (only for admin user)?'//, ok: 'Yes'
-                         submitter "vasya"
+                         submitter "hbkmustang"
                  }
              }
          }
