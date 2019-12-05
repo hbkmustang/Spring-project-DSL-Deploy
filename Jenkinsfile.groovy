@@ -54,28 +54,29 @@ pipeline {
          }
 
 
-//         stage ("DEPLOY") {
-//             agent any        
-//             steps {
-//                 build 'docker-Instance/deploy_in_docker_repo'
-// 
-//             parallel (
-//                     "ci-Instance" : {
-//                         build("ci-Instance/deploy", parameters: [string(name: "ArtifactVersion", value: "${env.ArtifactVersion}")])
-//                         build("ci-Instance/deploy_in_docker_repo", parameters: [string(name: "ImageVersion", value: "${env.Image_Version}")])
-//                     },
-//                     "docker-Instance" : {
-//                         build("docker-Instance/deploy", parameters: [string(name: "ArtifactVersion", value: "${env.ArtifactVersion}")])
-//                         build("docker-Instance/deploy_in_docker_repo", parameters: [string(name: "ImageVersion", value: "${env.ImageVersion}")])
-//                     }
-//             }, failFast: true
-//         }
+         stage ("DEPLOY") {
+             agent any        
+             steps {
+                 build 'docker-Instance/deploy_in_docker_repo'
+ 
+             parallel (
+                     "ci-Instance" : {
+                         build job: 'action-Instance/deploy', wait: true, parameters: [string(name: "ArtifactVersion", value: "${env.ArtifactVersion}"), string(name: "InstanceName", value: "ci")]
+                         build job: 'action-Instance/deploy_in_docker_repo', wait: true,  parameters: [string(name: "ImageVersion", value: "${env.ImageVersion}"), string(name: "InstanceName", value: "ci")]
+                     },
+                     "docker-Instance" : {
+                         build job: 'action-Instance/deploy', wait: true, parameters: [string(name: "ArtifactVersion", value: "${env.ArtifactVersion}"), string(name: "InstanceName", value: "docker")]
+                         build job: 'action-Instance/deploy_in_docker_repo', wait: true,  parameters: [string(name: "ImageVersion", value: "${env.ImageVersion}"), string(name: "InstanceName", value: "docker")]
+                     }
+             }, failFast: true
+         }
         
          stage ("APPROVAL FOR DEPLOY TO QA") {
              agent none
              steps {
-                 timeout(time: 30, unit: 'SECONDS') {
-                         input id: "Deploy", message: "Do you want to approve deploy to QA (only for admin user)?", submitter: "admin"
+                 timeout(time: 90, unit: 'SECONDS') {
+                         // input id: "Deploy", message: "Do you want to approve deploy to QA instance (only for admin user)?", submitter: "admin"
+                         input id: "Deploy", message: "Do you want to approve deploy to QA instance (timeout is abort) ?"
                  }
              }
          }
