@@ -55,17 +55,18 @@ pipeline {
 
 
          stage ("DEPLOY CI AND DOCKER INSTANCES") {
-             agent any        
-             parallel (
-                     "ci-Instance" : {
+             parallel {
+                 stage ("CI") {
+                     steps {
                          build job: 'action-Instance/deploy', wait: true, parameters: [string(name: "ArtifactVersion", value: "${env.ArtifactVersion}"), string(name: "InstanceName", value: "ci")]
                          build job: 'action-Instance/deploy_in_docker_repo', wait: true,  parameters: [string(name: "ImageVersion", value: "${env.ImageVersion}"), string(name: "InstanceName", value: "ci")]
-                     },
-                     "docker-Instance" : {
+                     }
+                 stage ("DOCKER") {
+                     steps {
                          build job: 'action-Instance/deploy', wait: true, parameters: [string(name: "ArtifactVersion", value: "${env.ArtifactVersion}"), string(name: "InstanceName", value: "docker")]
                          build job: 'action-Instance/deploy_in_docker_repo', wait: true,  parameters: [string(name: "ImageVersion", value: "${env.ImageVersion}"), string(name: "InstanceName", value: "docker")]
                      }
-             )
+             }
          }
         
          stage ("APPROVAL FOR DEPLOY TO QA") {
