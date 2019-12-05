@@ -72,7 +72,7 @@ pipeline {
 //         }
         
          stage ("APPROVAL FOR DEPLOY TO QA") {
-             agent none
+             agent any
              // timeout(time: 3, unit: "MINUTES") {
              //    input message: 'Do you want to approve the deploy in production (only for admin user)?', ok: 'Yes'
              //    submitter "admin"
