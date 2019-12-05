@@ -56,16 +56,16 @@ pipeline {
 
          stage ("DEPLOY CI AND DOCKER INSTANCES") {
              agent any        
-             parallel {
-                 stage ("DEPLOY ON CI") {
-                     build job: 'action-Instance/deploy', wait: true, parameters: [string(name: "ArtifactVersion", value: "${env.ArtifactVersion}"), string(name: "InstanceName", value: "ci")]
-                     build job: 'action-Instance/deploy_in_docker_repo', wait: true,  parameters: [string(name: "ImageVersion", value: "${env.ImageVersion}"), string(name: "InstanceName", value: "ci")]
-                 }
-                 stage ("DEPLOY ON DOCKER") {
+             parallel (
+                     "ci-Instance" : {
+                         build job: 'action-Instance/deploy', wait: true, parameters: [string(name: "ArtifactVersion", value: "${env.ArtifactVersion}"), string(name: "InstanceName", value: "ci")]
+                         build job: 'action-Instance/deploy_in_docker_repo', wait: true,  parameters: [string(name: "ImageVersion", value: "${env.ImageVersion}"), string(name: "InstanceName", value: "ci")]
+                     },
+                     "docker-Instance" : {
                          build job: 'action-Instance/deploy', wait: true, parameters: [string(name: "ArtifactVersion", value: "${env.ArtifactVersion}"), string(name: "InstanceName", value: "docker")]
                          build job: 'action-Instance/deploy_in_docker_repo', wait: true,  parameters: [string(name: "ImageVersion", value: "${env.ImageVersion}"), string(name: "InstanceName", value: "docker")]
-                 }
-             }
+                     }
+             ), failFast: true
          }
         
          stage ("APPROVAL FOR DEPLOY TO QA") {
