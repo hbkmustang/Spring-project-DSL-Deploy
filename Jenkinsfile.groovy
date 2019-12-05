@@ -73,43 +73,19 @@ pipeline {
 //         }
         
          stage ("APPROVAL FOR DEPLOY TO QA") {
-//             agent any
-             // timeout(time: 3, unit: "MINUTES") {
-             //    input message: 'Do you want to approve the deploy in production (only for admin user)?', ok: 'Yes'
-             //    submitter "admin"
-             // } 
+             agent none
              steps {
                  timeout(time: 30, unit: 'SECONDS') {
-                     input(id: 'Proceed1', message: 'Please confirm you agree with this')
-                         // parameters: [[$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm you agree with this']])
-//                     input {
-//                         message "Do you want to approve the deploy in production (only for Bohdan,hbkmustang,admin users)?"
-//                         ok "Yes"
-                         // submitter "Bohdan,hbkmustang,admin"
-//                     }
+                         input message: 'Do you want to approve the deploy in production (only for admin user)?', ok: 'Yes, we should'
+                         submitter "admin"
                  }
-//                 try {
-//                     timeout(time: 30, unit: 'SECONDS') {
-//                         input message: 'Do you want to approve the deploy in production (only for admin user)?', ok: 'Yes, we should'
-//                         submitter "admin"
-//                     }
-//                 } catch(err) {
-//                       def user = err.getCauses()[0].getUser()
-//                       if (user.toString == 'SYSTEM') {  // if it's system it's a timeout
-//                           didTimeout = true
-//                           echo "Build timed out at approval step"
-//                       } else if (userInput == false) {  // if not and input is false it's the user
-//                           echo "Build aborted by: [${user}]"
-//                       }
-//                 }
              }
          }
  
          stage ("DEPLOY TO QA") {
              agent any
              steps {
-                 // build job: 'ANOTHER_JOB_NAME', wait: false, parameters: [string(name: 'HELLO', value: String.valueOf(PARAMETER01))]
-                 build job: 'qa-Instance/deploy', wait: false, parameters: [string(name: "Artifact_Version", value: "${env.Artifact_Version}")]
+                 build job: 'qa-Instance/deploy', wait: true, parameters: [string(name: "Artifact_Version", value: "${env.Artifact_Version}")]
                  // build('qa-Instance/deploy_in_docker_repo', parameters: [string(name: "Artifact_Version", value: "${env.Artifact_Version}")])
              }
          }
