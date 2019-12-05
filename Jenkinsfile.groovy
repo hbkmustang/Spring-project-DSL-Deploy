@@ -76,7 +76,7 @@ pipeline {
              agent none
              steps {
                  timeout(time: 30, unit: 'SECONDS') {
-                         input message: 'Do you want to approve deploy to QA (only for vasya user)?', submitter: 'vasya'
+                         input id: 'Deploy QA', message: 'Do you want to approve deploy to QA (only for vasya user)?', submitter: 'vasya'
                  }
              }
          }
