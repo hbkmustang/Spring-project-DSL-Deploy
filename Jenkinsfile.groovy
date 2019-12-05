@@ -1,12 +1,12 @@
 
-properties([parameters([[$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT', description: 'PLEASE, SELECT YOUR VERSION OF ARTIFACT FOR DEPLOY.', filterLength: 1, filterable: false, name: 'Artifact_Version', randomName: 'choice-parameter-535167446217461', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return[\'error\']'], script: [classpath: [], sandbox: false, script: '''def command = "/usr/local/GraduationWork/select-version/select-artifact-version.sh"
+properties([parameters([[$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT', description: 'PLEASE, SELECT YOUR VERSION OF ARTIFACT FOR DEPLOY.', filterLength: 1, filterable: false, name: 'ArtifactVersion', randomName: 'choice-parameter-535167446217461', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return[\'error\']'], script: [classpath: [], sandbox: false, script: '''def command = "/usr/local/GraduationWork/select-version/select-artifact-version.sh"
                          def process = command.execute ( )
                          process.waitFor() 
                          def var_arim = [ ]
                          var_arim = "${process.in.text}" .eachLine { line ->
                              var_arim << line
                        }''']]],
-                        [$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT', description: 'PLEASE, SELECT YOUR VERSION OF IMAGE DOCKER FOR DEPLOY.', filterLength: 1, filterable: false, name: 'Image_Version', randomName: 'choice-parameter-535167449001810', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return[\'error\']'], script: [classpath: [], sandbox: false, script: '''def command = "/usr/local/GraduationWork/select-version/select-image-version.sh"
+                        [$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT', description: 'PLEASE, SELECT YOUR VERSION OF IMAGE DOCKER FOR DEPLOY.', filterLength: 1, filterable: false, name: 'ImageVersion', randomName: 'choice-parameter-535167449001810', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return[\'error\']'], script: [classpath: [], sandbox: false, script: '''def command = "/usr/local/GraduationWork/select-version/select-image-version.sh"
                          def process = command.execute ( )
                          process.waitFor() 
                          def var_arim = [ ]
@@ -50,8 +50,8 @@ pipeline {
          stage ("OUTPUT CHOICED VERSIONS") {
              agent any
              steps {
-                 echo "${env.Artifact_Version}"
-                 echo "${env.Image_Version}"
+                 echo "${env.ArtifactVersion}"
+                 echo "${env.ImageVersion}"
              }
          }
 
@@ -63,12 +63,12 @@ pipeline {
 // 
 //             parallel (
 //                     "ci-Instance" : {
-//                         build("ci-Instance/deploy", parameters: [string(name: "Artifact_Version", value: "${env.Artifact_Version}")])
-//                         build("ci-Instance/deploy_in_docker_repo", parameters: [string(name: "Image_Version", value: "${env.Image_Version}")])
+//                         build("ci-Instance/deploy", parameters: [string(name: "ArtifactVersion", value: "${env.ArtifactVersion}")])
+//                         build("ci-Instance/deploy_in_docker_repo", parameters: [string(name: "ImageVersion", value: "${env.Image_Version}")])
 //                     },
 //                     "docker-Instance" : {
-//                         build("docker-Instance/deploy", parameters: [string(name: "Artifact_Version", value: "${env.Artifact_Version}")])
-//                         build("docker-Instance/deploy_in_docker_repo", parameters: [string(name: "Image_Version", value: "${env.Image_Version}")])
+//                         build("docker-Instance/deploy", parameters: [string(name: "ArtifactVersion", value: "${env.ArtifactVersion}")])
+//                         build("docker-Instance/deploy_in_docker_repo", parameters: [string(name: "ImageVersion", value: "${env.ImageVersion}")])
 //                     }
 //             }, failFast: true
 //         }
@@ -85,8 +85,8 @@ pipeline {
          stage ("DEPLOY TO QA") {
              agent any
              steps {
-                 build job: 'qa-Instance/deploy', wait: true, parameters: [string(name: "Artifact_Version", value: "${env.Artifact_Version}")]
-                 // build('qa-Instance/deploy_in_docker_repo', parameters: [string(name: "Artifact_Version", value: "${env.Artifact_Version}")])
+                 build job: 'action-Instance/deploy', wait: true, parameters: [string(name: "ArtifactVersion", value: "${env.ArtifactVersion}")]
+                 build('action-Instance/deploy_in_docker_repo', parameters: [string(name: "ImageVersion", value: "${env.ImageVersion}")])
              }
          }
 
