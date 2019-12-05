@@ -1,15 +1,15 @@
 properties([parameters([[$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT', description: 'PLEASE, SELECT YOUR VERSION OF ARTIFACT FOR DEPLOY.', filterLength: 1, filterable: false, name: 'ArtifactVersion', randomName: 'choice-parameter-535167446217461', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return[\'error\']'], script: [classpath: [], sandbox: false, script: '''def command = "/usr/local/GraduationWork/select-version/select-artifact-version.sh"
-                         def process = command.execute ( )
-                         process.waitFor() 
-                         def var_arim = [ ]
-                         var_arim = "${process.in.text}" .eachLine { line ->
-                             var_arim << line
+def process = command.execute ( )
+process.waitFor() 
+def var_arim = [ ]
+var_arim = "${process.in.text}" .eachLine { line ->
+    var_arim << line
 }''']]],[$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT', description: 'PLEASE, SELECT YOUR VERSION OF IMAGE DOCKER FOR DEPLOY.', filterLength: 1, filterable: false, name: 'ImageVersion', randomName: 'choice-parameter-535167449001810', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return[\'error\']'], script: [classpath: [], sandbox: false, script: '''def command = "/usr/local/GraduationWork/select-version/select-image-version.sh"
-         def process = command.execute ( )
-         process.waitFor() 
-         def var_arim = [ ]
-         var_arim= "${process.in.text}" .eachLine { line ->
-             var_arim << line
+def process = command.execute ( )
+process.waitFor() 
+def var_arim = [ ]
+var_arim= "${process.in.text}" .eachLine { line ->
+    var_arim << line
 }''']]]])])
 
 pipeline {
