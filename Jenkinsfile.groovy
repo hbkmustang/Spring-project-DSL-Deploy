@@ -79,13 +79,15 @@ pipeline {
              //    submitter "admin"
              // } 
              steps {
-//                 timeout(time: 30, unit: 'SECONDS') {
-                     input {
-                         message "Do you want to approve the deploy in production (only for Bohdan,hbkmustang,admin users)?"
-                         ok "Yes"
+                 timeout(time: 30, unit: 'SECONDS') {
+                     input(id: 'Proceed1', message: 'Please confirm you agree with this', ok 'Yes')
+                         // parameters: [[$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm you agree with this']])
+//                     input {
+//                         message "Do you want to approve the deploy in production (only for Bohdan,hbkmustang,admin users)?"
+//                         ok "Yes"
                          // submitter "Bohdan,hbkmustang,admin"
                      }
-//                 }
+                 }
 //                 try {
 //                     timeout(time: 30, unit: 'SECONDS') {
 //                         input message: 'Do you want to approve the deploy in production (only for admin user)?', ok: 'Yes, we should'
