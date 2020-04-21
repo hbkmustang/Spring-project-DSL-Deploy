@@ -84,6 +84,7 @@ pipeline {
  
          stage ("DEPLOY TO QA") {
              agent any
+
              steps {
                  build job: 'action-Instance/deploy', wait: true, parameters: [string(name: "ArtifactVersion", value: "${env.ArtifactVersion}"), string(name: "InstanceName", value: "qa"), string(name: "PortNum", value: "8080")]
                  build job: 'action-Instance/deploy_in_docker_repo', wait: true,  parameters: [string(name: "ImageVersion", value: "${env.ImageVersion}"), string(name: "InstanceName", value: "qa")]
